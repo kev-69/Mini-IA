@@ -91,20 +91,16 @@ app.get('/api/patients', async (req, res) => {
 });
 
 // View Details of a Patient
-app.get('/api/patients/:patientId', async (req, res) => {
-  try {
-    const patientId = req.params.patientId;
-    const patient = await Patient.findById(patientId).populate({
-      path: 'encounters',
-      populate: { path: 'vitals' },
-    });
-    res.json(patient);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching patient details' });
-  }
-});
+app.get('/api/patients', async (req, res) => {
+    try {
+      const patients = await Patient.find({}, 'patientId surname otherNames gender phoneNumber');
+      res.json({ patients });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching patients' });
+    }
+  });
 
-// Start Server
+// Starting Server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
